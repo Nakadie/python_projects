@@ -17,6 +17,7 @@ import gym_super_mario_bros
 from gym_super_mario_bros.actions import RIGHT_ONLY
 from nes_py.wrappers import JoypadSpace
 from IPython.display import clear_output
+from sys import stdout
 
 from keras.models import save_model
 from keras.models import load_model
@@ -34,19 +35,19 @@ env = JoypadSpace(env, RIGHT_ONLY)
 # In[ ]:
 
 
-total_reward = 0
-done = True
+# total_reward = 0
+# done = True
 
-for step in range(100000):
-    env.render()
+# for step in range(100000):
+#     env.render()
     
-    if done:
-        state = env.reset()
-    state, reward, done, info = env.step(env.action_space.sample())
-    print(info)
-    total_reward += reward
-    clear_output(wait=True)
-env.close()
+#     if done:
+#         state = env.reset()
+#     state, reward, done, info = env.step(env.action_space.sample())
+#     print(info)
+#     total_reward += reward
+#     clear_output(wait=True)
+# env.close()
 
 
 # In[57]:
@@ -120,7 +121,7 @@ class DQNAgent:
         # Get variables from batch so we can find q-value
         for state, action, reward, next_state, done in minibatch:
             target = self.main_network.predict(state)
-            print(target)
+            #print(target)
             
             if done:
                 target[0][action] = reward
@@ -227,15 +228,17 @@ for i in range(num_episodes):
         Return += reward
         print('Episode is: {}\nTotal Time Step: {}\nCurrent Reward: {}\nEpsilon is: {}'.format(str(i), str(time_step), str(Return), str(dqn.epsilon)))
         
+        stdout.flush()
         clear_output(wait=True)
         
         if done:
             break
         
-        if len(dqn.memory) > batch_size and i > 5:
+        if len(dqn.memory) > batch_size and i > 1:
             dqn.train(batch_size)
             
     dqn.update_epsilon(i)
+    stdout.flush()
     clear_output(wait=True)
     dqn.update_target_network()
     # Save Model
@@ -260,26 +263,26 @@ dqn.load('MarioRL.h5')
 
 # Visualizing model
 
-while 1:
-    done = False
-    state = preprocess_state(env.reset())
-    state = state.reshape(-1, 80, 88, 1)
-    total_reward = 0
-    onGround = 79
+# while 1:
+#     done = False
+#     state = preprocess_state(env.reset())
+#     state = state.reshape(-1, 80, 88, 1)
+#     total_reward = 0
+#     onGround = 79
     
-    while not done:
-        env.render()
-        action = dqn.act(state, onGround)
-        next_state, reward, done, info = env.step(action)
+#     while not done:
+#         env.render()
+#         action = dqn.act(state, onGround)
+#         next_state, reward, done, info = env.step(action)
         
-        onGround = info['y_pos']
+#         onGround = info['y_pos']
         
-        next_state = preprocess_state(next_state)
-        next_state = next_state.reshape(-1, 80, 88, 1)
-        state = next_state
-        clear_output(wait=True)
+#         next_state = preprocess_state(next_state)
+#         next_state = next_state.reshape(-1, 80, 88, 1)
+#         state = next_state
+#         clear_output(wait=True)
         
-env.close()
+# env.close()
 
 
 # In[ ]:
