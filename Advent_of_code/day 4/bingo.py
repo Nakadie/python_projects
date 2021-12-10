@@ -4,7 +4,16 @@ txt = txt.read().splitlines()
 
 drawn_nums = [txt[0]]
 boards = []
-for i in range(1, len(txt)):
-    single = []
+while True:
+    temp = []
+    while len(temp) != 5:
+        for i in txt:
+            if i == '':
+                pass
+            else:
+                temp.append(i)
+
+
     
-print(drawn_nums)
+    
+print(txt)
