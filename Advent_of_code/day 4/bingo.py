@@ -32,9 +32,7 @@ def draw_and_update(drawn_nums):
         if check_bingo(boards) == True:
             print(num)
             break
-        else:
-            y += 1
-            print(f'no count == {y}')
+        
                 
                 
                 
@@ -118,6 +116,7 @@ def check_bingo(boards):
             occurrences = np.count_nonzero(check == True)
             if occurrences == 5:
                 final = np.sum(np.where(i == 'x', 0, i))
+                print(final)
                 return True
                 
     
