@@ -1,6 +1,5 @@
 import collections
 import numpy as np
-from numpy.core.records import array
 txt = open('D:\python_projects\Advent_of_code\day 4\puzzle.txt', 'r')
 txt = txt.read().splitlines()
 boardlist = open('D:\python_projects\Advent_of_code\day 4\puzzle2.txt', 'r')
@@ -30,8 +29,8 @@ def draw_and_update(drawn_nums):
     for num in drawn_nums:
         boards = np.where(boards == num, 'x', boards)
         if check_bingo(boards) == True:
-            print(num)
-            break
+            return print(num)
+           
         
                 
                 
