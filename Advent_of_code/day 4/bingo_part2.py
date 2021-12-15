@@ -2,15 +2,15 @@ import collections
 import numpy as np
 txt = open('D:\python_projects\Advent_of_code\day 4\puzzle.txt', 'r')
 txt = txt.read().splitlines()
-boardlist = open('D:\python_projects\Advent_of_code\day 4\jest2.txt', 'r')
+boardlist = open('D:\python_projects\Advent_of_code\day 4\puzzle2.txt', 'r')
 boardlist = boardlist.read().splitlines()
 #drawn_nums = [7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1]
-drawn_nums = [ 22, 13, 17, 11,  0, 8,  2, 23,  4, 24, 7, 5, 19]
+#drawn_nums = [ 22, 13, 17, 11,  0, 8,  2, 23,  4, 24, 7, 5, 19]
 
 
-# drawn_nums = [txt[0]]
-# drawn_nums = drawn_nums[0].split(',')
-# drawn_nums = [int(x) for x in drawn_nums]
+drawn_nums = [txt[0]]
+drawn_nums = drawn_nums[0].split(',')
+drawn_nums = [int(x) for x in drawn_nums]
 # drawn_nums = [92, 3, 88, 13, 50]
 
 
@@ -102,8 +102,8 @@ def draw_and_update(drawn_nums, boards):
                 ]
         
     for num in drawn_nums:
-        print(boards)
-        print('drawn', num)
+        
+        #print('drawn', num)
         boards = np.where(boards == num, -1, boards)
 
         for i in boards:
@@ -119,14 +119,11 @@ def draw_and_update(drawn_nums, boards):
                     bingo_count += 1
                     winners.append(i)
                     print('number of winner boards = ', len(winners))
-                    print(winners)
-                    boards = np.where(boards > -2, -3, i)
-                    
-                
- 
-
-                
-                
+                    print(winners[-1])
+                    print('board score = ', (np.sum(np.where(i == -1, 0, i))) * num)
+                    np.place(i, i > -2, -3)
+    
+                                    
 boards = get_boards()
 
 
