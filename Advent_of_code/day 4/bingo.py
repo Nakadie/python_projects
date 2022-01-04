@@ -118,11 +118,6 @@ def check_bingo(boards):
                 print(final)
                 return True
                 
-    
-            
-           
-
-
 boards = get_boards()
 
 draw_and_update(drawn_nums)
