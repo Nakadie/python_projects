@@ -1,5 +1,4 @@
 import sys
-from PySide6.QtCore import QTranslator
 from PySide6.QtWidgets import (
     QApplication,
     QHBoxLayout,
@@ -13,10 +12,13 @@ from PySide6.QtWidgets import (
     QLabel,
     QComboBox,
     QLineEdit,
-    QSpinBox
+    QSpinBox,
+    QRadioButton,
+    QDialogButtonBox,
+    QDialog
     
 )
-
+initializetxt = open('gui_tester.txt', "a")
 
 class MainWindow(QMainWindow):
     
@@ -28,16 +30,15 @@ class MainWindow(QMainWindow):
         self.Search_window = Search_window()
         
     def initUI(self):      
-        
+        # initialize ui for main window
        
-        btn1 = QPushButton("New Patient", self)
-        btn1.move(30, 50)
-        btn1.clicked.connect(self.goto_newpat)
-        btn2 = QPushButton("Search", self)
-        btn2.move(150, 50)
-      
-                   
-        btn2.clicked.connect(self.goto_search)
+        self.btn1 = QPushButton("New Patient", self)
+        self.btn1.move(30, 50)
+        self.btn1.clicked.connect(self.goto_newpat)
+
+        self.btn2 = QPushButton("Search", self)
+        self.btn2.move(150, 50)   
+        self.btn2.clicked.connect(self.goto_search)
         
         self.statusBar()
         
@@ -46,51 +47,79 @@ class MainWindow(QMainWindow):
         self.show()
 
     def goto_newpat(self, checked):
-        if self.New_Patient_window.isVisible():
-            self.New_Patient_window.hide()
-
-        else:
-            self.New_Patient_window.show()
+        self.newpat = New_Patient_window()
+        self.newpat.show()
 
     def goto_search(self, checked):
-        if self.Search_window.isVisible():
-            self.Search_window.hide()
+        """"""
+        self.search = Search_window()
+        self.search.show()
 
-        else:
-            self.Search_window.show()
-
-
-class New_Patient_window(QWidget):
+class New_Patient_window(QDialog):
     """
-    This "window" is a QWidget. If it has no parent, it
+    This "window" is a QDialog. If it has no parent, it
     will appear as a free-floating window as we want.
+    This window will allow entry for patient data then store it in the patient class 
+    then save to the txt file.
     """
     def __init__(self):
         super().__init__()
         
         self.initUI()
         
+
     def initUI(self):  
+        self.lname = QLineEdit()
+        self.fname = QLineEdit()
+        self.age = QSpinBox()
+        self.hgt = QLineEdit()
+        self.weight = QLineEdit()
+        self.blood = QComboBox()
+        self.sex = 's'
         layout = QFormLayout()
         
-        
-        
+        hbox = QHBoxLayout
+        QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        self.buttonBox = QDialogButtonBox(QBtn)
+
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('New Patient Entry')
-        combobox1 = QComboBox()
-        combobox1.addItems(['A+', 'O+', 'B+', 'AB+', 'A-', 'O-', 'B-', 'AB-'])
-        layout.addRow(("Last Name:"), QLineEdit())
-        layout.addRow(("First Name:"), QLineEdit())
-        layout.addRow(("Age:"), QSpinBox())
-        layout.addRow(("Height (cm):"), QLineEdit())
-        layout.addRow(("Weight (kgs):"), QLineEdit())
-        layout.addRow(("Blood Type:"), combobox1)
-        self.setLayout(layout)
+        
+        self.blood.addItems(['A+', 'O+', 'B+', 'AB+', 'A-', 'O-', 'B-', 'AB-'])
+        layout.addRow(("Last Name:"), self.lname)
+        layout.addRow(("First Name:"), self.fname)
+        layout.addRow(("Age:"), self.age)
+        layout.addRow(("Height (cm):"), self.hgt)
+        layout.addRow(("Weight (kgs):"), self.weight)
+        layout.addRow(("Blood Type:"), self.blood)
+        layout.addRow(QLabel('Sex:'), QHBoxLayout())
+        layout.addRow(QRadioButton('Male'), QRadioButton('Female'))
+        
+        layout.addRow(self.buttonBox)
 
+        self.buttonBox.accepted.connect(self.create_pat)
+        self.buttonBox.rejected.connect(self.reject)
+        
+        
+        self.setLayout(layout)
+        print(self.lname.text)
+
+    def create_pat(self):
+  
+        
+        print("last name : {0}".format(self.lname.text()))
+        print("bloodtype : {0}".format(self.blood.currentText()))
+        print("Age : {0}".format(self.age.text()))
+
+        # closing the window
+        self.close()
+
+        
 class Search_window(QWidget):
     """
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window as we want.
+    This window will allow you to search through all patients in the patient class.
     """
     def __init__(self):
         super().__init__()
@@ -110,6 +139,7 @@ def main():
     
     app = QApplication(sys.argv)
     ex = MainWindow()
+    ex.show()
     sys.exit(app.exec())
 
 
