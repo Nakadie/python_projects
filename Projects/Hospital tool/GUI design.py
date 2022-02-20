@@ -1,11 +1,19 @@
 import sys
+from PySide6.QtCore import QTranslator
 from PySide6.QtWidgets import (
     QApplication,
     QHBoxLayout,
     QVBoxLayout,
     QPushButton,
     QWidget,
-    QMainWindow
+    QMainWindow,
+    QFormLayout,
+    QLayout,
+    QLayoutItem,
+    QLabel,
+    QComboBox,
+    QLineEdit,
+    QSpinBox
     
 )
 
@@ -63,13 +71,21 @@ class New_Patient_window(QWidget):
         self.initUI()
         
     def initUI(self):  
-        layout = QVBoxLayout()
+        layout = QFormLayout()
         
         
-        self.setLayout(layout)
+        
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('New Patient Entry')
-        
+        combobox1 = QComboBox()
+        combobox1.addItems(['A+', 'O+', 'B+', 'AB+', 'A-', 'O-', 'B-', 'AB-'])
+        layout.addRow(("Last Name:"), QLineEdit())
+        layout.addRow(("First Name:"), QLineEdit())
+        layout.addRow(("Age:"), QSpinBox())
+        layout.addRow(("Height (cm):"), QLineEdit())
+        layout.addRow(("Weight (kgs):"), QLineEdit())
+        layout.addRow(("Blood Type:"), combobox1)
+        self.setLayout(layout)
 
 class Search_window(QWidget):
     """

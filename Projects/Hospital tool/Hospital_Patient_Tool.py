@@ -1,16 +1,21 @@
 """
 Hospital patient data base tool used to track patients and ailments.
 """
-
+import sys
 from PySide6.QtWidgets import (
     QApplication,
     QHBoxLayout,
-    QGridLayout,
     QVBoxLayout,
     QPushButton,
     QWidget,
-    QMainWindow
-    
+    QMainWindow,
+    QFormLayout,
+    QLayout,
+    QLayoutItem,
+    QLabel,
+    QComboBox,
+    QLineEdit,
+    QSpinBox
 )
 
 import sys
@@ -153,12 +158,21 @@ class New_Patient_window(QWidget):
         self.initUI()
         
     def initUI(self):  
-        layout = QGridLayout()
+        layout = QFormLayout()
         
         
-        self.setLayout(layout)
+        
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('New Patient Entry')
+        combobox1 = QComboBox()
+        combobox1.addItems(['A+', 'O+', 'B+', 'AB+', 'A-', 'O-', 'B-', 'AB-'])
+        layout.addRow(("Last Name:"), QLineEdit())
+        layout.addRow(("First Name:"), QLineEdit())
+        layout.addRow(("Age:"), QSpinBox())
+        layout.addRow(("Height (cm):"), QLineEdit())
+        layout.addRow(("Weight (kgs):"), QLineEdit())
+        layout.addRow(("Blood Type:"), combobox1)
+        self.setLayout(layout)
         
         
 
