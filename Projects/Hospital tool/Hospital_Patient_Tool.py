@@ -215,11 +215,17 @@ class Search_window(QDialog):
         self.search2.clicked.connect(self.patnum_search)
 
     def name_search(self):
-        print(self.lname.text())
+        names = [x.lname for x in Patient.get_all_pats()]
+        for i in names:
+            if i == self.lname.text():
+                print('found')
         self.close()
     
     def patnum_search(self):
-        print(self.patnum.text())
+        numbers = [x.patnum for x in Patient.get_all_pats()]
+        for i in numbers:
+            if int(i) == int(self.patnum.text()):
+                print('found')
         self.close()
         
 

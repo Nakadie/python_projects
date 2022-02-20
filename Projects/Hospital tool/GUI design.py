@@ -1,25 +1,92 @@
-from re import search
+"""
+Hospital patient data base tool used to track patients and ailments.
+"""
 import sys
-from PySide6.QtWidgets import (
-    QApplication,
-    QHBoxLayout,
-    QVBoxLayout,
-    QPushButton,
-    QWidget,
-    QMainWindow,
-    QFormLayout,
-    QLayout,
-    QLayoutItem,
-    QLabel,
-    QComboBox,
-    QLineEdit,
-    QSpinBox,
-    QRadioButton,
-    QDialogButtonBox,
-    QDialog
+from PySide6.QtWidgets import *
+
+import sys
+initializetxt = open('patient_db.txt', "a")
+
+
+class Patient(object):
+    """
+    A Patient is a person who has come to see the doctor. 
+    they have name, age, weight, height, gender
+    """
+    def __init__(self, patnum, lname, fname, age, weight, height, bloodtype):
+        """
+        Initializes a patient with patient number, last name, firstname, age, weight, height, bloodtype
+        """
+        
+        self.height = height
+        self.weight = weight
+        self.fname = fname.capitalize()
+        self.lname = lname.capitalize()
+        self.bloodtype = bloodtype
+        self.age = age
+        self.patnum = patnum
+
+    def to_string(self):
+        """
+        turns a patient class into a string for storage in the txt file.
+        """
+        return f"{self.patnum} {self.lname} {self.fname} {self.age} {self.weight} {self.height} {self.bloodtype} "
+        
+    @classmethod
+    def get_all_pats(cls):
+        """
+        get all the patients from the patient_db.txt and initialize them to a class and put in a list.
+        """
+        all_patients = []
+        args = database().patient_strs
+        for i in args:
+            all_patients.append(cls(*i))
+        return all_patients
+
+class database(object):
+    """
+    database is used to open and manipulate the txt file holding all the patient data.
+    """
+    def __init__(self):
+        self.filename = 'patient_db.txt'
+        self.patient_strs = self.initialize_patients()
+
+
+    def initialize_patients(self):
+        """
+        Get all the patients from the patient_db.txt
+        """
+        txt = open(self.filename, 'r')
+        patient_strs = txt.read().splitlines()
+        patient_strs = [x.split() for x in patient_strs]
+        return patient_strs
     
-)
-initializetxt = open('gui_tester.txt', "a")
+    
+    def add_db(self, patient):
+        """
+        Append patient to the end of the patient_db.txt
+
+        patient: a string 
+        """
+    
+        with open(self.filename, "a+") as file_object:
+            file_object.seek(0)
+            data = file_object.read(100)
+            if len(data) > 0:
+                file_object.write("\n")
+            file_object.write(patient.to_string())
+
+    def get_patnum(self):
+        """
+        gets the new patient number.
+        """
+        
+        if self.patient_strs == []:
+            return 1
+        else:
+            return int(self.patient_strs[-1][0]) + 1
+
+
 
 class MainWindow(QMainWindow):
     
@@ -70,8 +137,6 @@ class New_Patient_window(QDialog):
         
 
     def initUI(self):  
-
-        #variables
         self.lname = QLineEdit()
         self.fname = QLineEdit()
         self.age = QSpinBox()
@@ -80,15 +145,17 @@ class New_Patient_window(QDialog):
         self.blood = QComboBox()
         self.sex = 's'
         layout = QFormLayout()
+    
+        
+        hbox = QHBoxLayout
         QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.buttonBox = QDialogButtonBox(QBtn)
 
-        # Window Setup
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('New Patient Entry')
-        
-        #table setup
         self.blood.addItems(['A+', 'O+', 'B+', 'AB+', 'A-', 'O-', 'B-', 'AB-'])
+
+     
         layout.addRow(("Last Name:"), self.lname)
         layout.addRow(("First Name:"), self.fname)
         layout.addRow(("Age:"), self.age)
@@ -97,9 +164,9 @@ class New_Patient_window(QDialog):
         layout.addRow(("Blood Type:"), self.blood)
         layout.addRow(QLabel('Sex:'), QHBoxLayout())
         layout.addRow(QRadioButton('Male'), QRadioButton('Female'))
+        
         layout.addRow(self.buttonBox)
 
-        #Button commands.
         self.buttonBox.accepted.connect(self.create_pat)
         self.buttonBox.rejected.connect(self.reject)
         
@@ -108,13 +175,9 @@ class New_Patient_window(QDialog):
         print(self.lname.text)
 
     def create_pat(self):
-  
-        
-        print("last name : {0}".format(self.lname.text()))
-        print("bloodtype : {0}".format(self.blood.currentText()))
-        print("Age : {0}".format(self.age.text()))
-
-        # closing the window
+        new_pat = Patient(database().get_patnum(), self.lname.text(), self.fname.text(), self.age.text(), self.weight.text(), self.hgt.text(), self.blood.currentText())
+        database().add_db(new_pat)
+    
         self.close()
 
         
@@ -152,11 +215,17 @@ class Search_window(QDialog):
         self.search2.clicked.connect(self.patnum_search)
 
     def name_search(self):
-        print(self.lname.text())
+        names = [x.lname for x in Patient.get_all_pats()]
+        for i in names:
+            if i == self.lname.text().capitalize():
+                print('found')
         self.close()
     
     def patnum_search(self):
-        print(self.patnum.text())
+        numbers = [x.patnum for x in Patient.get_all_pats()]
+        for i in numbers:
+            if int(i) == int(self.patnum.text()):
+                print('found')
         self.close()
         
 
@@ -165,10 +234,35 @@ def main():
     
     app = QApplication(sys.argv)
     ex = MainWindow()
-    ex.show()
     sys.exit(app.exec())
 
 
 if __name__ == '__main__':
     main()
+
+
+    
+
+    
+    def create_list(self):
+        """
+        Creates the list that lists patient info in individual strings.
+        """
+        pass
+        # data = [x.split() for x in self.patient_strs]
+        # return data
+
+    
+
+
+
+#patients_list = [Patient('Brady', 'tom', 225, 75, 'O+', 34)]
+
+
+# Patient('Brady', 'tom', 225, 75, 'O+', 34).get_patnum()
+# database().initialize_patients()
+# database().add_db((patients_list[0]))
+# database().create_list()
+# print(database().patient_strs)
+
 
