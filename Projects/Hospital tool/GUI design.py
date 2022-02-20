@@ -1,3 +1,4 @@
+from re import search
 import sys
 from PySide6.QtWidgets import (
     QApplication,
@@ -69,6 +70,8 @@ class New_Patient_window(QDialog):
         
 
     def initUI(self):  
+
+        #variables
         self.lname = QLineEdit()
         self.fname = QLineEdit()
         self.age = QSpinBox()
@@ -77,14 +80,14 @@ class New_Patient_window(QDialog):
         self.blood = QComboBox()
         self.sex = 's'
         layout = QFormLayout()
-        
-        hbox = QHBoxLayout
         QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.buttonBox = QDialogButtonBox(QBtn)
 
+        # Window Setup
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('New Patient Entry')
         
+        #table setup
         self.blood.addItems(['A+', 'O+', 'B+', 'AB+', 'A-', 'O-', 'B-', 'AB-'])
         layout.addRow(("Last Name:"), self.lname)
         layout.addRow(("First Name:"), self.fname)
@@ -94,9 +97,9 @@ class New_Patient_window(QDialog):
         layout.addRow(("Blood Type:"), self.blood)
         layout.addRow(QLabel('Sex:'), QHBoxLayout())
         layout.addRow(QRadioButton('Male'), QRadioButton('Female'))
-        
         layout.addRow(self.buttonBox)
 
+        #Button commands.
         self.buttonBox.accepted.connect(self.create_pat)
         self.buttonBox.rejected.connect(self.reject)
         
@@ -115,7 +118,7 @@ class New_Patient_window(QDialog):
         self.close()
 
         
-class Search_window(QWidget):
+class Search_window(QDialog):
     """
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window as we want.
@@ -127,11 +130,34 @@ class Search_window(QWidget):
         self.initUI()
         
     def initUI(self):  
-        layout = QVBoxLayout()
-       
+        layout = QFormLayout()
+        self.lname = QLineEdit()
+        self.patnum = QLineEdit()
+        backbtn = QDialogButtonBox.Cancel
+        self.box = QDialogButtonBox(backbtn)
+        self.search1 = QPushButton('Search')
+        self.search2 = QPushButton('Search')
+        layout.addRow(("Last Name:"), self.lname)
+        layout.addRow('', self.search1)
+        layout.addRow(("Patient #:"), self.patnum)
+        layout.addRow('', self.search2)
+        layout.addRow('', self.box)
         self.setLayout(layout)
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('Search')
+
+        self.box.rejected.connect(self.reject)
+
+        self.search1.clicked.connect(self.name_search)
+        self.search2.clicked.connect(self.patnum_search)
+
+    def name_search(self):
+        print(self.lname.text())
+        self.close()
+    
+    def patnum_search(self):
+        print(self.patnum.text())
+        self.close()
         
 
         

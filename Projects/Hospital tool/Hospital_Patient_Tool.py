@@ -24,8 +24,7 @@ class Patient(object):
         self.lname = lname.capitalize()
         self.bloodtype = bloodtype
         self.age = age
-        self.patnum = patnum #self.get_patnum()
-        # self.patlist = self.get_all_pats()
+        self.patnum = patnum
 
     def to_string(self):
         """
@@ -182,7 +181,7 @@ class New_Patient_window(QDialog):
         self.close()
 
         
-class Search_window(QWidget):
+class Search_window(QDialog):
     """
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window as we want.
@@ -194,11 +193,34 @@ class Search_window(QWidget):
         self.initUI()
         
     def initUI(self):  
-        layout = QVBoxLayout()
-       
+        layout = QFormLayout()
+        self.lname = QLineEdit()
+        self.patnum = QLineEdit()
+        backbtn = QDialogButtonBox.Cancel
+        self.box = QDialogButtonBox(backbtn)
+        self.search1 = QPushButton('Search')
+        self.search2 = QPushButton('Search')
+        layout.addRow(("Last Name:"), self.lname)
+        layout.addRow('', self.search1)
+        layout.addRow(("Patient #:"), self.patnum)
+        layout.addRow('', self.search2)
+        layout.addRow('', self.box)
         self.setLayout(layout)
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('Search')
+
+        self.box.rejected.connect(self.reject)
+
+        self.search1.clicked.connect(self.name_search)
+        self.search2.clicked.connect(self.patnum_search)
+
+    def name_search(self):
+        print(self.lname.text())
+        self.close()
+    
+    def patnum_search(self):
+        print(self.patnum.text())
+        self.close()
         
 
         
