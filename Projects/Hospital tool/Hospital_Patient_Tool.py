@@ -27,19 +27,6 @@ class Patient(object):
         self.patnum = patnum #self.get_patnum()
         # self.patlist = self.get_all_pats()
 
-    def get_patnum(self):
-        """
-        gets the new patient number.
-        """
-        database()
-        if database().patient_strs == []:
-            return 1
-        else:
-            return int(database().patient_strs[-1][0]) + 1
-        
-       
-
-
     def to_string(self):
         """
         turns a patient class into a string for storage in the txt file.
@@ -89,6 +76,16 @@ class database(object):
             if len(data) > 0:
                 file_object.write("\n")
             file_object.write(patient.to_string())
+
+    def get_patnum(self):
+        """
+        gets the new patient number.
+        """
+        
+        if self.patient_strs == []:
+            return 1
+        else:
+            return int(self.patient_strs[-1][0]) + 1
 
 
 
@@ -149,6 +146,7 @@ class New_Patient_window(QDialog):
         self.blood = QComboBox()
         self.sex = 's'
         layout = QFormLayout()
+    
         
         hbox = QHBoxLayout
         QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
@@ -156,8 +154,9 @@ class New_Patient_window(QDialog):
 
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('New Patient Entry')
-        
         self.blood.addItems(['A+', 'O+', 'B+', 'AB+', 'A-', 'O-', 'B-', 'AB-'])
+
+     
         layout.addRow(("Last Name:"), self.lname)
         layout.addRow(("First Name:"), self.fname)
         layout.addRow(("Age:"), self.age)
@@ -177,13 +176,9 @@ class New_Patient_window(QDialog):
         print(self.lname.text)
 
     def create_pat(self):
-  
-        
-        print("last name : {0}".format(self.lname.text()))
-        print("bloodtype : {0}".format(self.blood.currentText()))
-        print("Age : {0}".format(self.age.text()))
-
-        # closing the window
+        new_pat = Patient(database().get_patnum(), self.lname.text(), self.fname.text(), self.age.text(), self.weight.text(), self.hgt.text(), self.blood.currentText())
+        database().add_db(new_pat)
+    
         self.close()
 
         
@@ -221,13 +216,13 @@ if __name__ == '__main__':
     
 
     
-    # def create_list(self):
-    #     """
-    #     Creates the list that lists patient info in individual strings.
-    #     """
-    #     pass
-    #     # data = [x.split() for x in self.patient_strs]
-    #     # return data
+    def create_list(self):
+        """
+        Creates the list that lists patient info in individual strings.
+        """
+        pass
+        # data = [x.split() for x in self.patient_strs]
+        # return data
 
     
 
@@ -241,5 +236,5 @@ if __name__ == '__main__':
 # database().add_db((patients_list[0]))
 # database().create_list()
 # print(database().patient_strs)
-print(Patient.get_all_pats())
+
 
