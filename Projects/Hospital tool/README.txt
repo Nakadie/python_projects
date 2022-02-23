@@ -13,7 +13,7 @@ Possible future updates will be:
 
 Known issues being worked on:
 - Patients who have the same last name cannot be differentiated. 
-- Sex not being displayed correctly.
+- Sex not being displayed correctly. ### fixed ###
 
 
 
