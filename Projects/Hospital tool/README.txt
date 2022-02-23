@@ -11,6 +11,7 @@ Possible future updates will be:
 - SQL upgrade.
 - Ability to list all patients and select from a list.
 - Edit existing patients.
+- Add section for list of existing issues.
 
 Known issues being worked on:
 - Patients who have the same last name cannot be differentiated. 

@@ -13,3 +13,8 @@ Possible future updates will be:
 Known issues being worked on:
 - Patients who have the same last name cannot be differentiated. 
 - Sex not being displayed correctly. ### fixed ###
+
+
+Here is a demo of the project.
+
+![](Projects\Hospital tool\Demo.gif)
