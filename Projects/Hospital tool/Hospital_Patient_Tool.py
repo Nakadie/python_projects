@@ -3,6 +3,7 @@ Hospital patient data base tool used to track patients and ailments.
 """
 import sys
 from PySide6.QtWidgets import *
+from PySide6.QtGui import QDoubleValidator, QIntValidator
 
 initializetxt = open("patient_db.txt", "a")
 
@@ -156,6 +157,10 @@ class New_Patient_window(QDialog):
         self.patnum = str(database().get_patnum())
         self.sex = QComboBox()
         layout = QFormLayout()
+        self.onlyInt = QIntValidator()
+        self.intorfloat = QDoubleValidator(0, 3, 2)
+        self.hgt.setValidator(self.intorfloat)
+        self.weight.setValidator(self.intorfloat)
 
         QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.buttonBox = QDialogButtonBox(QBtn)
@@ -238,6 +243,9 @@ class Search_window(QDialog):
         self.search2 = QPushButton("Search")
         self.namerr = QLabel()
         self.numerr = QLabel()
+        self.onlyInt = QIntValidator()
+        self.patnum.setValidator(self.onlyInt)
+        
 
         # Layout.
         layout.addRow("", self.namerr)
