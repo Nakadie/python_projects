@@ -4,7 +4,6 @@ Hospital patient data base tool used to track patients and ailments.
 import sys
 from PySide6.QtWidgets import *
 
-import sys
 initializetxt = open('patient_db.txt', "a")
 
 
@@ -89,6 +88,9 @@ class database(object):
 
 
 class MainWindow(QMainWindow):
+    """
+    Main window for the database. You can search or create a new patient from here.
+    """
     
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -114,19 +116,24 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Patient Database')
         self.show()
 
-    def goto_newpat(self, checked):
+    def goto_newpat(self):
+        """
+        Open new window to create a new patient.
+        """
         self.newpat = New_Patient_window()
         self.newpat.show()
 
-    def goto_search(self, checked):
-        """"""
+    def goto_search(self):
+        """
+        Open new window for searching.
+        """
         self.search = Search_window()
         self.search.show()
 
 class New_Patient_window(QDialog):
     """
-    This "window" is a QDialog. If it has no parent, it
-    will appear as a free-floating window as we want.
+    This "window" is a QDialog.
+    It will appear as a free-floating window.
     This window will allow entry for patient data then store it in the patient class 
     then save to the txt file.
     """
@@ -138,6 +145,8 @@ class New_Patient_window(QDialog):
         
 
     def initUI(self):  
+
+        # variables
         self.lname = QLineEdit()
         self.fname = QLineEdit()
         self.age = QSpinBox()
@@ -150,10 +159,12 @@ class New_Patient_window(QDialog):
 
     
         
-        hbox = QHBoxLayout
+        
         QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.buttonBox = QDialogButtonBox(QBtn)
 
+
+        # Design
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('New Patient Entry')
         self.blood.addItems(['A+', 'O+', 'B+', 'AB+', 'A-', 'O-', 'B-', 'AB-'])
@@ -167,20 +178,23 @@ class New_Patient_window(QDialog):
         layout.addRow(("Blood Type:"), self.blood)
         layout.addRow(QLabel('Sex:'), QHBoxLayout())
         layout.addRow(QRadioButton('Male'), QRadioButton('Female'))
-        
         layout.addRow(self.buttonBox)
 
         self.buttonBox.accepted.connect(self.create_pat)
         self.buttonBox.rejected.connect(self.reject)
         
-        
         self.setLayout(layout)
         
 
     def create_pat(self):
+        """
+        Will create a new patient object and will display the page that lists patient info.
+        """
+        # initialize patient.
         new_pat = Patient(self.patnum, self.lname.text(), self.fname.text(), self.age.text(), self.weight.text(), self.hgt.text(), self.blood.currentText())
         database().add_db(new_pat)
 
+        # preparing variables for next window.
         self.display_pat.patnum.setText(self.patnum)
         self.display_pat.lname.setText(self.lname.text())
         self.display_pat.fname.setText(self.fname.text()) 
@@ -199,7 +213,7 @@ class New_Patient_window(QDialog):
 class Search_window(QDialog):
     """
     This "window" is a QWidget. If it has no parent, it
-    will appear as a free-floating window as we want.
+    will appear as a free-floating window.
     This window will allow you to search through all patients in the patient class.
     """
     def __init__(self):
@@ -209,6 +223,8 @@ class Search_window(QDialog):
         self.initUI()
         
     def initUI(self):  
+
+        # Variables.
         layout = QFormLayout()
         self.lname = QLineEdit()
         self.patnum = QLineEdit()
@@ -219,6 +235,7 @@ class Search_window(QDialog):
         self.namerr = QLabel()
         self.numerr = QLabel()
 
+        # Layout.
         layout.addRow('', self.namerr)
         layout.addRow(("Last Name:"), self.lname)
         layout.addRow('', self.search1)
@@ -230,12 +247,17 @@ class Search_window(QDialog):
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('Search')
 
+        # Reactions
         self.box.rejected.connect(self.reject)
-
         self.search1.clicked.connect(self.name_search)
         self.search2.clicked.connect(self.patnum_search)
 
     def name_search(self):
+        """
+        Search by name. 
+        Will display new window of patient info if found.
+        will display a message if not.
+        """
         names = Patient.get_all_pats()
         for Patient.lname in names:
             if Patient.lname == self.lname.text().capitalize():
@@ -245,6 +267,11 @@ class Search_window(QDialog):
         
     
     def patnum_search(self):
+        """
+        Searches by patient number
+        Will display new window of patient info if found.
+        will display a message if not.
+        """
         numbers = [x.patnum for x in Patient.get_all_pats()]
         for i in numbers:
             if int(i) == int(self.patnum.text()):
@@ -265,7 +292,7 @@ class Search_window(QDialog):
 class Display_patient(QWidget):
     """
     This "window" is a QWidget. If it has no parent, it
-    will appear as a free-floating window as we want.
+    will appear as a free-floating window.
     This window will display patient information.
     """
     
@@ -275,6 +302,8 @@ class Display_patient(QWidget):
         
         
     def initUI(self): 
+
+        # Variables.
         self.patnum = QLabel()
         self.lname = QLabel()
         self.fname = QLabel() 
@@ -286,7 +315,7 @@ class Display_patient(QWidget):
         layout = QFormLayout()
     
         
-       
+        # layout.
         self.setLayout(layout)
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('Patient info')
@@ -308,3 +337,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
