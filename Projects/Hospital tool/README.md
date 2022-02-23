@@ -17,4 +17,4 @@ Known issues being worked on:
 
 Here is a demo of the project.
 
-![](Projects\Hospital tool\Demo.gif)
+![](https://github.com/Nakadie/python_projects/blob/main/Projects/Hospital%20tool/Demo.gif)
