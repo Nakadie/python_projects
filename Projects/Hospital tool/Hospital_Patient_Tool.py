@@ -13,7 +13,7 @@ class Patient(object):
     they have name, age, weight, height, gender
     """
 
-    def __init__(self, patnum, lname, fname, age, weight, height, bloodtype):
+    def __init__(self, patnum, lname, fname, age, weight, height, bloodtype, sex):
         """
         Initializes a patient with patient number, last name, firstname, age, weight, height, bloodtype
         """
@@ -25,12 +25,13 @@ class Patient(object):
         self.bloodtype = bloodtype
         self.age = age
         self.patnum = patnum
+        self.sex = sex
 
     def to_string(self):
         """
         turns a patient class into a string for storage in the txt file.
         """
-        return f"{self.patnum} {self.lname} {self.fname} {self.age} {self.weight} {self.height} {self.bloodtype} "
+        return f"{self.patnum} {self.lname} {self.fname} {self.age} {self.weight} {self.height} {self.bloodtype} {self.sex} "
 
     @classmethod
     def get_all_pats(cls):
@@ -153,7 +154,7 @@ class New_Patient_window(QDialog):
         self.weight = QLineEdit()
         self.blood = QComboBox()
         self.patnum = str(database().get_patnum())
-        self.sex = "s"
+        self.sex = QComboBox()
         layout = QFormLayout()
 
         QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
@@ -163,6 +164,7 @@ class New_Patient_window(QDialog):
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle("New Patient Entry")
         self.blood.addItems(["A+", "O+", "B+", "AB+", "A-", "O-", "B-", "AB-"])
+        self.sex.addItems(["Male", "Female"])
 
         layout.addRow(("Patient #:"), QLabel(self.patnum))
         layout.addRow(("Last Name:"), self.lname)
@@ -171,8 +173,7 @@ class New_Patient_window(QDialog):
         layout.addRow(("Height (cm):"), self.hgt)
         layout.addRow(("Weight (kgs):"), self.weight)
         layout.addRow(("Blood Type:"), self.blood)
-        layout.addRow(QLabel("Sex:"), QHBoxLayout())
-        layout.addRow(QRadioButton("Male"), QRadioButton("Female"))
+        layout.addRow(QLabel("Sex:"), self.sex)
         layout.addRow(self.buttonBox)
 
         self.buttonBox.accepted.connect(self.create_pat)
@@ -193,6 +194,7 @@ class New_Patient_window(QDialog):
             self.weight.text(),
             self.hgt.text(),
             self.blood.currentText(),
+            self.sex.currentText()
         )
         database().add_db(new_pat)
 
@@ -204,7 +206,7 @@ class New_Patient_window(QDialog):
         self.display_pat.hgt.setText(self.hgt.text())
         self.display_pat.weight.setText(self.weight.text())
         self.display_pat.blood.setText(self.blood.currentText())
-        self.sex = QLabel()
+        self.display_pat.sex.setText(self.sex.currentText())
 
         self.display_pat.show()
 
@@ -260,10 +262,21 @@ class Search_window(QDialog):
         Will display new window of patient info if found.
         will display a message if not.
         """
-        names = Patient.get_all_pats()
-        for Patient.lname in names:
-            if Patient.lname == self.lname.text().capitalize():
-                print("found")
+        
+        pats = Patient.get_all_pats()
+        for i in range(len(pats)):
+            if pats[i].lname == self.lname.text().capitalize():
+                self.display_pat.patnum.setText(str(int(i) + 1))
+                self.display_pat.lname.setText(pats[(int(i))].lname)
+                self.display_pat.fname.setText(pats[(int(i))].fname)
+                self.display_pat.age.setText(pats[(int(i))].age)
+                self.display_pat.hgt.setText(pats[(int(i))].height)
+                self.display_pat.weight.setText(pats[(int(i))].weight)
+                self.display_pat.blood.setText(pats[(int(i))].bloodtype)
+                self.display_pat.sex.setText(pats[(int(i))].sex)
+
+                self.close()
+                self.display_pat.show()
             else:
                 self.namerr.setText(self.lname.text().capitalize() + ": Not Found")
 
@@ -273,17 +286,18 @@ class Search_window(QDialog):
         Will display new window of patient info if found.
         will display a message if not.
         """
+        pats = Patient.get_all_pats()
         numbers = [x.patnum for x in Patient.get_all_pats()]
         for i in numbers:
             if int(i) == int(self.patnum.text()):
-                self.display_pat.patnum.setText(str(int(i) - 1))
-                self.display_pat.lname.setText((Patient.get_all_pats())[(int(i) - 1)].lname)
-                self.display_pat.fname.setText((Patient.get_all_pats())[(int(i) - 1)].fname)
-                self.display_pat.age.setText((Patient.get_all_pats())[(int(i) - 1)].age)
-                self.display_pat.hgt.setText((Patient.get_all_pats())[(int(i) - 1)].height)
-                self.display_pat.weight.setText((Patient.get_all_pats())[(int(i) - 1)].weight)
-                self.display_pat.blood.setText((Patient.get_all_pats())[(int(i) - 1)].bloodtype)
-                self.sex = QLabel()
+                self.display_pat.patnum.setText(str(int(i)))
+                self.display_pat.lname.setText(pats[(int(i) - 1)].lname)
+                self.display_pat.fname.setText(pats[(int(i) - 1)].fname)
+                self.display_pat.age.setText(pats[(int(i) - 1)].age)
+                self.display_pat.hgt.setText(pats[(int(i) - 1)].height)
+                self.display_pat.weight.setText(pats[(int(i) - 1)].weight)
+                self.display_pat.blood.setText(pats[(int(i) - 1)].bloodtype)
+                self.display_pat.sex.setText(pats[(int(i) - 1)].sex)
 
                 self.close()
                 self.display_pat.show()
@@ -327,6 +341,7 @@ class Display_patient(QWidget):
         layout.addRow(("Height (cm):"), self.hgt)
         layout.addRow(("Weight (kgs):"), self.weight)
         layout.addRow(("Blood Type:"), self.blood)
+        layout.addRow(("Sex:"), self.sex)
 
 
 def main():

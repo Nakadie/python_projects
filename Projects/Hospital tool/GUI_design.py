@@ -277,22 +277,12 @@ class Search_window(QDialog):
         for i in numbers:
             if int(i) == int(self.patnum.text()):
                 self.display_pat.patnum.setText(str(int(i) - 1))
-                self.display_pat.lname.setText(
-                    (Patient.get_all_pats())[(int(i) - 1)].lname
-                )
-                self.display_pat.fname.setText(
-                    (Patient.get_all_pats())[(int(i) - 1)].fname
-                )
+                self.display_pat.lname.setText((Patient.get_all_pats())[(int(i) - 1)].lname)
+                self.display_pat.fname.setText((Patient.get_all_pats())[(int(i) - 1)].fname)
                 self.display_pat.age.setText((Patient.get_all_pats())[(int(i) - 1)].age)
-                self.display_pat.hgt.setText(
-                    (Patient.get_all_pats())[(int(i) - 1)].height
-                )
-                self.display_pat.weight.setText(
-                    (Patient.get_all_pats())[(int(i) - 1)].weight
-                )
-                self.display_pat.blood.setText(
-                    (Patient.get_all_pats())[(int(i) - 1)].bloodtype
-                )
+                self.display_pat.hgt.setText((Patient.get_all_pats())[(int(i) - 1)].height)
+                self.display_pat.weight.setText((Patient.get_all_pats())[(int(i) - 1)].weight)
+                self.display_pat.blood.setText((Patient.get_all_pats())[(int(i) - 1)].bloodtype)
                 self.sex = QLabel()
 
                 self.close()
