@@ -10,6 +10,7 @@ Possible future updates will be:
 - Time stamped notes on patients.
 - SQL upgrade.
 - Ability to list all patients and select from a list.
+- Edit existing patients.
 
 Known issues being worked on:
 - Patients who have the same last name cannot be differentiated. 
