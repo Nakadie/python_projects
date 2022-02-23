@@ -108,8 +108,6 @@ class MainWindow(QMainWindow):
         self.btn2.move(150, 50)   
         self.btn2.clicked.connect(self.goto_search)
         
-        self.statusBar()
-        
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('Patient Database')
         self.show()
