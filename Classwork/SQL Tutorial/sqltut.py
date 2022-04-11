@@ -18,8 +18,7 @@ curs.execute(""" CREATE TABLE IF NOT EXISTS example (
 
                 
 )""")
-
-
+print(curs.fetchall())
 
 
 conn.commit()
